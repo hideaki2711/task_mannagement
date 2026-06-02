@@ -1,0 +1,13 @@
+backend/venv
+backend/.venv
+**/__pycache__/
+*.pyc
+
+backend/task_app.db
+
+frontend/node_modules
+frontend/dist
+
+.env
+DS_Store
+.vscoade/
