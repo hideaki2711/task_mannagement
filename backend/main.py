@@ -79,3 +79,10 @@ def create_task(task:TaskCreate, db: Session = Depends(detabase.get_db)):
        "task_description": db_task.task_description
      }
    }
+
+@app.get("/api/tasks")
+def read_task(db: Session = Depends(detabase.get_db)):
+    print("フロントからタスク一覧を出すようにリクエストあり")
+    tasks = crud.get_all_tasks(db=db)
+
+    return tasks

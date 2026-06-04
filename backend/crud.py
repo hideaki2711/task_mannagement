@@ -15,3 +15,7 @@ def create_task_in_db(db : Session, task_data):
     db.refresh(db_task)
 
     return db_task
+
+def get_all_tasks(db: Session):
+        return db.query(models.TaskModel).all()
+    
