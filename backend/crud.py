@@ -16,6 +16,15 @@ def create_task_in_db(db : Session, task_data):
 
     return db_task
 
+#データベース全表示
 def get_all_tasks(db: Session):
         return db.query(models.TaskModel).all()
     
+# データベース削除
+def delete_task_by_id(db: Session, task_id:int):
+      db_task = db.query(models.TaskModel).filter(models.TaskModel.id == task_id).first()
+      if db_task:
+           db.delete(db_task)
+           db.commit()
+           return True
+      return False

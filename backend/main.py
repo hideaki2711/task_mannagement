@@ -86,3 +86,15 @@ def read_task(db: Session = Depends(detabase.get_db)):
     tasks = crud.get_all_tasks(db=db)
 
     return tasks
+
+@app.delete("/api/tasks/{task?id}")
+def delete_task(task_id: int, db:Session = Depends( detabase.get_db)):
+  print("フロントからID:{task_id}の削除依頼がありました。")
+
+
+  success = crud.delete_task_by_id(db=db, task_id=task_id)
+  if not success:
+     from fastapi import HTTPException
+     raise HTTPException(status_code=404, datail="タスクが見つかりませんでした。")
+
+  return{"message":"削除成功"} 
