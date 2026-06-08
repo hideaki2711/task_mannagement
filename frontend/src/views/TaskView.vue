@@ -94,11 +94,20 @@
                             <v-card-text v-if="task.task_description">
                                 {{ task.task_description }}
                             </v-card-text>
+                             <v-card-actions class="justify-end">
+                              <v-btn
+                                  icon="mdi-delete"
+                                  color="error"
+                                  variabt="text"
+                                  @click="deleteTask(task.id)"
+                ></v-btn>
+            </v-card-actions>
                         </v-card>
                         </v-col>
                     </v-row>
                 </v-card-text>
-            </v-card>
+           
+           </v-card>
         </v-container>
 </template>
 
@@ -147,5 +156,18 @@ const submitTask = async () =>{
     }
 };
 
-
+const deleteTask = async (task_id: number) =>{
+    if(!confirm('本当に削除していいですか？')){
+    return;
+    }
+     try{
+       console.log(`ID: ${task_id} を削除します。`);
+       await axios.delete(`http://127.0.0.1:8000/api/tasks/${task_id}`);
+       alert('タスクを削除しました。');
+       fetchTasks();
+     }catch (error){
+        console.log(`タスクの削除に失敗しました。`,error);
+        alert('削除に失敗しました。');
+    }
+};
 </script>

@@ -87,7 +87,7 @@ def read_task(db: Session = Depends(detabase.get_db)):
 
     return tasks
 
-@app.delete("/api/tasks/{task?id}")
+@app.delete("/api/tasks/{task_id}")
 def delete_task(task_id: int, db:Session = Depends( detabase.get_db)):
   print("フロントからID:{task_id}の削除依頼がありました。")
 
