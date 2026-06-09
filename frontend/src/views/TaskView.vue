@@ -1,6 +1,6 @@
 <template>
         <v-container>
-            <v-card>
+            <v-card vartiant="flat" class="mx-4 pa-4 bg-grey-lighten-4 rounded-jg">
                 <v-card-title>
                     タスク入力画面
                 </v-card-title>
@@ -67,8 +67,37 @@
 
                     </v-divider>
 
+                    <v-card variant="flat" class="mx-4 pa-4 bg-grey-lighten-4 rounded-lg">
+                        <v-row align="center">
+                            <v-col cols="12" md="6">
+                                <v-text-field
+                                v-model="searchQuery"
+                                prepend-inner-icon="mdi-magnify"
+                                variant="solo"
+                                hide-detailes
+                                clearable
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="6" class="text-md-right">
+                                <v-btn-toggle
+                                v-model="selectedCategory"
+                                mandatory
+                                color="primary"
+                                variant="outlined"
+                                >
+                                <v-btn value="all">すべて</v-btn>
+                                <v-btn value="business">業務</v-btn>
+                                <v-btn value="daily">日常</v-btn>
+                                </v-btn-toggle>
+                            </v-col>
+
+                        </v-row>
+                    </v-card>
+
+
+
                     <v-card-title class="text-h5">タスク一覧</v-card-title>
-                    <v-alert v-if="taskList.length === 0" type="info" class="mx-4 my-2">
+                    <v-alert v-if="filteredTaskList.length === 0" type="info" class="mx-4 my-2">
                         登録されたタスクはありません。
                     </v-alert>
 
@@ -100,7 +129,7 @@
                                   color="error"
                                   variabt="text"
                                   @click="deleteTask(task.id)"
-                ></v-btn>
+                               ></v-btn>
             </v-card-actions>
                         </v-card>
                         </v-col>
@@ -112,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref , onMounted} from 'vue';
+import { ref , onMounted , computed} from 'vue';
 import axios from 'axios';
 
 const taskForm = ref({
@@ -170,4 +199,32 @@ const deleteTask = async (task_id: number) =>{
         alert('削除に失敗しました。');
     }
 };
+
+const searchQuery = ref('');
+const selectedCategory = ref('all');
+
+const filteredTaskList = computed(() =>{
+    let list = taskList.value;
+
+    if(selectedCategory.value === 'business'){
+        list = list.filter(task => task.task_index === 'business_task_task');
+    } else if (selectedCategory.value === 'daily') {
+        list = list.filter(task => task.task_index!== 'business__task_task');
+    }
+
+    if(searchQuery.value){
+        const query = searchQuery.value.toLowerCase();
+        list = list.filter(task => {
+            const matchTitle = task.task_title?.toLowerCase().includes(query);
+            const matchDesc = task.task_description?.toLowerCase().includes(query)
+            return matchTitle || matchDesc;
+        });
+    }
+
+    return list;
+
+});
+
+
+
 </script>
